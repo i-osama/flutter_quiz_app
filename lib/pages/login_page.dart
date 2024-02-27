@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz_app/pages/signup_page.dart';
 import 'package:flutter_quiz_app/utils/constants/colors.dart';
 
 class LoginPage extends StatefulWidget{
@@ -92,6 +94,13 @@ class _LoginPageState extends State<LoginPage> {
                     color: Theme.of(context).primaryColor, // Customize the style for the second par
                     fontWeight: FontWeight.bold,
                   ),
+                  recognizer: TapGestureRecognizer()..onTap =(){
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignupPage()),);
+                  }
                 ),
               ],
             ),
