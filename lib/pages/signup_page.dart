@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/constants/colors.dart';
+
 class SignupPage extends StatefulWidget{
   const SignupPage({super.key});
 
@@ -15,13 +17,13 @@ class _SignupPageState extends State<SignupPage>{
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _genderController = TextEditingController();
+  // final _genderController = TextEditingController();
   final _passwordController = TextEditingController();
   final _rePassController = TextEditingController();
   bool _passToggle = true;
   bool _rePassToggle = true;
 
-  String? genderDropDown = "Male";
+  String? _genderDropDown = "--gender--";
 
   final _formField = GlobalKey<FormState>();
 
@@ -45,6 +47,10 @@ class _SignupPageState extends State<SignupPage>{
                labelText: "First name"
                // hintText: "First name"
                ),
+               validator: (value){
+                 if(value!.isEmpty){return 'Field cannot be empty!';}
+                 return null;
+               },
              ),
              const SizedBox(height: 18,),
              TextFormField(
@@ -53,14 +59,32 @@ class _SignupPageState extends State<SignupPage>{
                labelText: "Last name"
                // hintText: "First name"
                ),
+
+               validator: (value){
+                 if(value!.isEmpty){return 'Field cannot be empty!';}
+                 return null;
+               },
              ),
              const SizedBox(height: 18,),
              TextFormField(
                controller: _emailController,
                decoration: const InputDecoration(border: OutlineInputBorder(),
                labelText: "Email"
-               // hintText: "First name"
+
                ),
+               validator: (value){
+                 if(value!.isEmpty){return 'Field cannot be empty!';}
+
+                 final bool emailValid = RegExp(
+                     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                     .hasMatch(value);
+
+                 if (!emailValid) {
+                   return "Email format is not correct!";
+                 }
+
+                 return null;
+               },
              ),
              const SizedBox(height: 18,),
 
@@ -75,22 +99,32 @@ class _SignupPageState extends State<SignupPage>{
              //   // hintText: "First name"
              //   ),
              // ),
-             
-             DropdownButton<String>(
-                 value: genderDropDown,
-                 items: <String>["Male","Female","Others"].map( (String value){
-                   return DropdownMenuItem<String>(
-                     value: value,
-                       child: Text(value));
-
-                 }).toList() ,
-             onChanged: (String? newValue){
-                   setState(() {
-                     genderDropDown = newValue;
-                   });
-
-             }),
-
+             DropdownButtonFormField<String>(
+               elevation: 15,
+               icon: const Icon(Icons.keyboard_double_arrow_down_sharp),
+               // value: _genderDropDown,
+               hint: Text("--gender--"),
+               items: <String>["--gender--", "Male", "Female", "Others"].map((String value) {
+                 return DropdownMenuItem<String>(
+                   value: value,
+                   child: Text(value),
+                 );
+               }).toList(),
+               onChanged: (String? newValue) {
+                 setState(() {
+                   debugPrint('Gender value $newValue');
+                   _genderDropDown = newValue;
+                 });
+               },
+               validator: (value) {
+                 if (value!.isEmpty) {
+                   return "Gender cannot be empty!";
+                 } else if (value == "--gender--") {
+                   return "Please select a gender";
+                 }
+                 return null;
+               },
+             ),
              // ________________
              // Gender
              // ________________
@@ -111,6 +145,12 @@ class _SignupPageState extends State<SignupPage>{
                  ),
 
                ),
+               validator: (value){
+                 if(value!.isEmpty){return 'Field cannot be empty!';}
+                 else if(value.length <5){return 'Password too short';}
+
+                 return null;
+               },
              ),
              const SizedBox(height: 18,),
              TextFormField(
@@ -126,37 +166,29 @@ class _SignupPageState extends State<SignupPage>{
                },
                  child: _rePassToggle? const Icon(Icons.visibility_outlined): const Icon(Icons.visibility_off_outlined),) ,
                ),
+               validator: (value){
+                 if(value!.isEmpty){return 'Field cannot be empty!';}
+                 else if(value != _passwordController.text){return 'Password does not matched';}
+                 return null;
+               },
              ),
 
 
+             const SizedBox(height: 35,),
              ElevatedButton(
                // submit button
                onPressed: () {
-                 debugPrint("Signup submit pressed *");
+                 // debugPrint("Signup submit pressed *");
+                 debugPrint(_genderDropDown);
 
-                 if (_formField.currentState!.validate() == false ||
-                     genderDropDown == null) {
-                 //   // debugPrint("Gender;; $gender");
-                 //   debugPrint(
-                 //       "-----------------first:: ${genderToggle == false && gender == null} second:: ${genderToggle == true && gender != null}");
-                 //   if ((genderToggle == false && gender == null) ||
-                 //       (genderToggle == true && gender != null)) {
-                 //     _genderErrorBoxVisible();
-                 //   }
-                 // } else if (_formField.currentState!.validate() &&
-                 //     gender != null) {
-                 //   // ######### Storing data after checking all after successful validation
-                 //   _storeData(f_name_controller.text, l_name_controller.text,
-                 //       email_controller.text, gender!, pass_controller.text);
-                 //   f_name_controller.clear();
-                 //   l_name_controller.clear();
-                 //   email_controller.clear();
-                 //   pass_controller.clear();
-                 //   re_pass_controller.clear();
-                 //
-                 //   if (genderToggle) {
-                 //     _genderErrorBoxVisible();
-                 //   }
+                 if (_formField.currentState!.validate()) {
+                   _firstNameController.clear();
+                   _lastNameController.clear();
+                   _emailController.clear();
+                   _passwordController.clear();
+                   _rePassController.clear();
+
+
                  } else {
                    debugPrint(
                        "----------------Something wrong!!------------");
