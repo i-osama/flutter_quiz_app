@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz_app/database/database_helper.dart';
 
 import '../utils/constants/colors.dart';
 
@@ -26,6 +27,15 @@ class _SignupPageState extends State<SignupPage>{
   String? _genderDropDown = "--gender--";
 
   final _formField = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+
+    getAllDataFromDatabase();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +113,7 @@ class _SignupPageState extends State<SignupPage>{
                elevation: 15,
                icon: const Icon(Icons.keyboard_double_arrow_down_sharp),
                // value: _genderDropDown,
-               hint: Text("--gender--"),
+               hint: const Text("--gender--"),
                items: <String>["--gender--", "Male", "Female", "Others"].map((String value) {
                  return DropdownMenuItem<String>(
                    value: value,
@@ -117,7 +127,10 @@ class _SignupPageState extends State<SignupPage>{
                  });
                },
                validator: (value) {
-                 if (value!.isEmpty) {
+                 if (value == null){
+                   return "Gender cannot be empty!";
+                 }
+                 else if (value!.isEmpty || value == null) {
                    return "Gender cannot be empty!";
                  } else if (value == "--gender--") {
                    return "Please select a gender";
@@ -182,11 +195,15 @@ class _SignupPageState extends State<SignupPage>{
                  debugPrint(_genderDropDown);
 
                  if (_formField.currentState!.validate()) {
+
+
+                   _storeDataToDatabase();
                    _firstNameController.clear();
                    _lastNameController.clear();
                    _emailController.clear();
                    _passwordController.clear();
                    _rePassController.clear();
+
 
 
                  } else {
@@ -227,6 +244,34 @@ class _SignupPageState extends State<SignupPage>{
      ),
 
    ));
+  }
+
+  void _storeDataToDatabase() async{
+    final dbHelper = DatabaseHelper.instance;
+    // await DatabaseHelper.
+    // await dbHelper.insertUser(firstName: firstName, lastName: lastName, email: email, gender: gender, password: password)
+
+
+
+    await dbHelper.insertUser(
+      firstName: _firstNameController.text,
+      lastName:_lastNameController.text,
+      email_: _emailController.text,
+      gender_: _genderDropDown!,
+      password_: _passwordController.text,
+    );
+
+    // await dbHelper.
+
+  }
+
+  void getAllDataFromDatabase() async{
+    final dbHelper = DatabaseHelper.instance;
+
+    // ---------------Get user data
+    debugPrint("################### Data from the database ##########################");
+    await dbHelper.getUsers();
+
   }
 
 }
