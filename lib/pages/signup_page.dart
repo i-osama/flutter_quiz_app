@@ -270,7 +270,7 @@ class _SignupPageState extends State<SignupPage>{
 
     // ---------------Get user data
     debugPrint("################### Data from the database ##########################");
-    await dbHelper.getUsers();
+    await dbHelper.readUsers();
 
   }
 
