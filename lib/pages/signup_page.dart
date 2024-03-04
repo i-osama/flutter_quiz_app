@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quiz_app/database/database_helper.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../utils/constants/colors.dart';
 
@@ -203,6 +204,8 @@ class _SignupPageState extends State<SignupPage>{
                    _emailController.clear();
                    _passwordController.clear();
                    _rePassController.clear();
+                   
+                   Fluttertoast.showToast(msg: "Data have been saved successfully!");
 
 
 
