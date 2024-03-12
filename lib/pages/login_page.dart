@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz_app/pages/dashboard.dart';
 import 'package:flutter_quiz_app/pages/signup_page.dart';
 import 'package:flutter_quiz_app/utils/constants/colors.dart';
+import 'package:flutter_quiz_app/widgets/top_bar.dart';
 
 class LoginPage extends StatefulWidget{
   const LoginPage({super.key});
@@ -61,8 +63,15 @@ class _LoginPageState extends State<LoginPage> {
           //--
           ElevatedButton(onPressed: (){
             if(_formField.currentState!.validate()){
+              // Login button pressed
               // ...... check if the data is in the local database or not
               // if the data is true than go to Home() page
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const Dashboard()),);
+
             }
           },
               style: ElevatedButton.styleFrom(
@@ -100,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const SignupPage()),);
+
                   }
                 ),
               ],
